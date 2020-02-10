@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:social_media_app/Register.dart';
 
 
 class MyHomePage extends StatefulWidget {
@@ -42,25 +44,52 @@ class _MyHomePageState extends State<MyHomePage> {
           "Social Media App"
         ),
       ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: Firestore.instance.collection('books').snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.hasError)
-            return new Text('Error: ${snapshot.error}');
-          switch (snapshot.connectionState) {
-            case ConnectionState.waiting: return new Text('Loading...');
-            default:
-              return new ListView(
-                children: snapshot.data.documents.map((DocumentSnapshot document) {
-                  return new ListTile(
-                    title: new Text(document['title']),
-                    subtitle: new Text(document['author']),
-                  );
-                }).toList(),
-              );
-          }
-        },
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+//        crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            RaisedButton(
+              child: Text("Register"),
+              onPressed: (){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Register()),
+                );
+              },
+
+            ),
+            RaisedButton(
+              child: Text("Login"),
+              onPressed: (){
+//              Navigator.push(
+//                context,
+//                MaterialPageRoute(builder: (context) => SecondRoute()),
+//              );
+              },
+            )
+          ],
+        ),
       ),
+//      body: StreamBuilder<QuerySnapshot>(
+//        stream: Firestore.instance.collection('books').snapshots(),
+//        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+//          if (snapshot.hasError)
+//            return new Text('Error: ${snapshot.error}');
+//          switch (snapshot.connectionState) {
+//            case ConnectionState.waiting: return new Text('Loading...');
+//            default:
+//              return new ListView(
+//                children: snapshot.data.documents.map((DocumentSnapshot document) {
+//                  return new ListTile(
+//                    title: new Text(document['title']),
+//                    subtitle: new Text(document['author']),
+//                  );
+//                }).toList(),
+//              );
+//          }
+//        },
+//      ),
     );
   }
 }
