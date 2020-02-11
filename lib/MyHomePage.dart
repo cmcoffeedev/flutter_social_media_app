@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:social_media_app/Register.dart';
 
+import 'Login.dart';
+
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -62,10 +64,10 @@ class _MyHomePageState extends State<MyHomePage> {
             RaisedButton(
               child: Text("Login"),
               onPressed: (){
-//              Navigator.push(
-//                context,
-//                MaterialPageRoute(builder: (context) => SecondRoute()),
-//              );
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Login()),
+              );
               },
             )
           ],
