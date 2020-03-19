@@ -5,7 +5,6 @@ import 'package:social_media_app/Register.dart';
 
 import 'Login.dart';
 
-
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
 
@@ -42,35 +41,61 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          "Social Media App"
-        ),
+        title: Text("Social Media App"),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-//        crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            RaisedButton(
-              child: Text("Register"),
-              onPressed: (){
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Register()),
-                );
-              },
-
-            ),
-            RaisedButton(
-              child: Text("Login"),
-              onPressed: (){
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Login()),
-              );
-              },
-            )
-          ],
+        child: IntrinsicWidth(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: RaisedButton(
+                  color: Color(0xFF2699FB),
+                  child: Padding(
+                    padding: const EdgeInsets.all(13.0),
+                    child: Text(
+                      "Register",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Register()),
+                    );
+                  },
+                ),
+              ),
+              SizedBox(
+                height: 10.0,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: RaisedButton(
+                  color: Color(0xFF2699FB),
+                  child: Padding(
+                    padding: const EdgeInsets.all(13.0),
+                    child: Text(
+                      "Login",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Login()),
+                    );
+                  },
+                ),
+              )
+            ],
+          ),
         ),
       ),
 //      body: StreamBuilder<QuerySnapshot>(
