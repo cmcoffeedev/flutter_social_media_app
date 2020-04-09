@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'AuthUtil.dart';
+import 'NewsFeed.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -92,7 +93,7 @@ class _LoginState extends State<Login> {
                           return "Please enter a valid email";
                         }
                       } else {
-                        return "Please enter a valid eml";
+                        return "Please enter a valid email";
                       }
                     }
 
@@ -167,6 +168,10 @@ class _LoginState extends State<Login> {
                                 emailController.text, passwordController.text)
                             .then((AuthResult authResult) {
                           print("authResult is ${authResult.user.email}");
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => NewsFeed()),
+                          );
                         }).catchError((error) {
                           var e = error;
                           var authError = "";

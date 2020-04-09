@@ -1,9 +1,11 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:social_media_app/AuthUtil.dart';
+import 'package:social_media_app/NewsFeed.dart';
 
 class Register extends StatefulWidget {
   @override
@@ -14,6 +16,7 @@ class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
     TextEditingController emailController = TextEditingController();
+    TextEditingController usernameController = TextEditingController();
     TextEditingController passwordController = TextEditingController();
     TextEditingController confirmPassController = TextEditingController();
     final _formKey = GlobalKey<FormState>();
@@ -29,6 +32,49 @@ class _RegisterState extends State<Register> {
           child: Column(
 //            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  controller: usernameController,
+                  keyboardType: TextInputType.text,
+                  decoration: InputDecoration(
+                    prefixIcon: Icon(
+                      Icons.person_outline,
+                      color: Color(0xFF8F38AA),
+                    ),
+                    labelText: "Username",
+                    labelStyle: TextStyle(
+                      color: Colors.black,
+                    ),
+                    errorStyle: TextStyle(color: Colors.white),
+                    filled: true,
+                    fillColor: Colors.white,
+                    hintText: "Username",
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(32.0)),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide:
+                          BorderSide(color: Color(0xFF8F38AA), width: 1.0),
+                      borderRadius: BorderRadius.all(Radius.circular(32.0)),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide:
+                          BorderSide(color: Color(0xFF8F38AA), width: 2.0),
+                      borderRadius: BorderRadius.all(Radius.circular(32.0)),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return "Please enter a valid username";
+                    }
+
+                    return null;
+                  },
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
@@ -93,7 +139,7 @@ class _RegisterState extends State<Register> {
                           return "Please enter a valid email";
                         }
                       } else {
-                        return "Please enter a valid eml";
+                        return "Please enter a valid email";
                       }
                     }
 
@@ -216,7 +262,22 @@ class _RegisterState extends State<Register> {
 
                         AuthUtil.registerUser(
                                 emailController.text, passwordController.text)
-                            .catchError((error) {
+                            .then((result) {
+                          Firestore.instance
+                              .collection('users')
+                              .document()
+                              .setData({
+                            'username': usernameController.text,
+                            'email': emailController.text,
+                            "uid": result.user.uid
+                          }).then((success) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => NewsFeed()),
+                            );
+                          });
+                        }).catchError((error) {
                           var e = error;
                           var authError = "";
                           print("caught error ${e.code}");

@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:social_media_app/Register.dart';
 
 import 'Login.dart';
+import 'NewsFeed.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -25,6 +27,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  FirebaseUser loggedInUser;
 
   void _incrementCounter() {
     setState(() {
@@ -35,6 +39,47 @@ class _MyHomePageState extends State<MyHomePage> {
       // called again, and so nothing would appear to happen.
       _counter++;
     });
+  }
+
+  Future getCurrentUser() async {
+    try {
+      final user = await _auth.currentUser();
+      if (user != null) {
+        loggedInUser = user;
+        print("logged in user is ${loggedInUser.email}");
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => NewsFeed()),
+        );
+//        Firestore.instance
+//            .collection('users')
+//            .document(loggedInUser.uid)
+//            .get()
+//            .then((DocumentSnapshot ds) {
+//          setState(() {
+//            var fname = ds.data["fname"];
+//            var lname = ds.data["lname"];
+//            var phone = ds.data["phone"];
+//            var email = ds.data["email"];
+//
+//          });
+//          // use ds as a snapshot
+//        });
+      } else {
+        print("user is null");
+      }
+      setState(() {});
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getCurrentUser();
   }
 
   @override
