@@ -271,7 +271,7 @@ class _RegisterState extends State<Register> {
                             'email': emailController.text,
                             "uid": result.user.uid
                           }).then((success) {
-                            Navigator.push(
+                            Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => NewsFeed()),

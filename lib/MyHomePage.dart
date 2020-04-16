@@ -48,7 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
         loggedInUser = user;
         print("logged in user is ${loggedInUser.email}");
 
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => NewsFeed()),
         );
@@ -62,7 +62,6 @@ class _MyHomePageState extends State<MyHomePage> {
 //            var lname = ds.data["lname"];
 //            var phone = ds.data["phone"];
 //            var email = ds.data["email"];
-//
 //          });
 //          // use ds as a snapshot
 //        });
