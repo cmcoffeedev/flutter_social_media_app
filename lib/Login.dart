@@ -168,6 +168,7 @@ class _LoginState extends State<Login> {
                                 emailController.text, passwordController.text)
                             .then((AuthResult authResult) {
                           print("authResult is ${authResult.user.email}");
+                          Navigator.pop(context);
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(builder: (context) => NewsFeed()),

@@ -1,7 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:social_media_app/AuthUtil.dart';
 import 'package:social_media_app/CreatePostDialog.dart';
+
+import 'MyHomePage.dart';
+import 'User.dart';
 
 class NewsFeed extends StatefulWidget {
   @override
@@ -12,6 +16,9 @@ class _NewsFeedState extends State<NewsFeed> {
   Stream<QuerySnapshot> stream;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseUser loggedInUser;
+  User user;
+  String userImg =
+      "https://img.icons8.com/pastel-glyph/64/000000/person-male.png";
 
   @override
   void initState() {
@@ -19,54 +26,57 @@ class _NewsFeedState extends State<NewsFeed> {
     super.initState();
 
     stream = Firestore.instance.collection('posts').snapshots();
-    getCurrentUser();
+
+    getUserInfo();
   }
 
-  Future getCurrentUser() async {
-    try {
-      final user = await _auth.currentUser();
-      if (user != null) {
-        loggedInUser = user;
-        print("logged in user is ${loggedInUser.email}");
-
-//        Firestore.instance
-//            .collection('users')
-//            .document(loggedInUser.uid)
-//            .get()
-//            .then((DocumentSnapshot ds) {
-//          setState(() {
-//            var fname = ds.data["fname"];
-//            var lname = ds.data["lname"];
-//            var phone = ds.data["phone"];
-//            var email = ds.data["email"];
-//
-//          });
-//          // use ds as a snapshot
-//        });
-      } else {
-        print("user is null");
-      }
-      setState(() {});
-    } catch (e) {
-      print(e);
+  getUserInfo() async {
+    loggedInUser = await AuthUtil.getCurrentUser();
+    DocumentSnapshot userSnap =
+        await AuthUtil.getCurrentUserFromFS(loggedInUser);
+    if (userSnap != null) {
+      print("userSnap is not null ${userSnap["email"]}");
+      setState(() {
+        user = User(loggedInUser, userSnap);
+      });
+    } else {
+      print("userSnap is not null");
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey.shade300,
       appBar: AppBar(
         title: Text("News Feed"),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.exit_to_app),
+            onPressed: () {
+              AuthUtil.signOutCurrentUser().then((val) {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => MyHomePage()),
+                );
+              });
+            },
+          ),
+        ],
       ),
       body: Column(
         children: <Widget>[
           RaisedButton(
-            child: Text("Create Post"),
+            color: Colors.purple,
+            child: Text(
+              "Create Post",
+              style: TextStyle(color: Colors.white),
+            ),
             onPressed: () {
               showDialog(
                   context: context,
                   builder: (context) {
-                    return CreatePostDialog(user: loggedInUser);
+                    return CreatePostDialog(user: user);
                   });
             },
           ),
@@ -85,12 +95,23 @@ class _NewsFeedState extends State<NewsFeed> {
                       children: snapshot.data.documents
                           .map((DocumentSnapshot document) {
                         var userEmail = document['userEmail'];
+                        var userName = document['userName'];
                         if (userEmail == null) {
                           userEmail = "no user email";
                         }
-                        return new ListTile(
-                          title: new Text(document['title']),
-                          subtitle: new Text(userEmail),
+                        if (userName == null) {
+                          userName = "no user name";
+                        }
+                        return Card(
+                          elevation: 2.0,
+                          child: new ListTile(
+                            leading: CircleAvatar(
+                              backgroundColor: Colors.purple.shade300,
+                              backgroundImage: NetworkImage(userImg),
+                            ),
+                            title: new Text(document['title']),
+                            subtitle: new Text(userName),
+                          ),
                         );
                       }).toList(),
                     ),
