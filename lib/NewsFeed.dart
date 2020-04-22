@@ -5,6 +5,7 @@ import 'package:social_media_app/AuthUtil.dart';
 import 'package:social_media_app/CreatePostDialog.dart';
 
 import 'MyHomePage.dart';
+import 'NewsFeedRow.dart';
 import 'User.dart';
 
 class NewsFeed extends StatefulWidget {
@@ -94,24 +95,10 @@ class _NewsFeedState extends State<NewsFeed> {
                     child: new ListView(
                       children: snapshot.data.documents
                           .map((DocumentSnapshot document) {
-                        var userEmail = document['userEmail'];
-                        var userName = document['userName'];
-                        if (userEmail == null) {
-                          userEmail = "no user email";
-                        }
-                        if (userName == null) {
-                          userName = "no user name";
-                        }
-                        return Card(
-                          elevation: 2.0,
-                          child: new ListTile(
-                            leading: CircleAvatar(
-                              backgroundColor: Colors.purple.shade300,
-                              backgroundImage: NetworkImage(userImg),
-                            ),
-                            title: new Text(document['title']),
-                            subtitle: new Text(userName),
-                          ),
+                        return NewsFeedRow(
+                          userImg: userImg,
+                          document: document,
+                          user: loggedInUser,
                         );
                       }).toList(),
                     ),
