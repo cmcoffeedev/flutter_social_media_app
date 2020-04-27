@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:social_media_app/AuthUtil.dart';
 import 'package:social_media_app/CreatePostDialog.dart';
+import 'package:social_media_app/NewsFeedRowArray.dart';
 
 import 'MyHomePage.dart';
 import 'NewsFeedRow.dart';
@@ -95,7 +96,7 @@ class _NewsFeedState extends State<NewsFeed> {
                     child: new ListView(
                       children: snapshot.data.documents
                           .map((DocumentSnapshot document) {
-                        return NewsFeedRow(
+                        return NewsFeedRowArray(
                           userImg: userImg,
                           document: document,
                           user: loggedInUser,
