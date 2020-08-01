@@ -18,6 +18,7 @@ class NewsFeedRowArray extends StatefulWidget {
 class _NewsFeedRowArrayState extends State<NewsFeedRowArray> {
   bool liked = false;
   String facebook;
+  int numberOfReactions = 0;
 
   List<ReactiveIconDefinition> _facebook = <ReactiveIconDefinition>[
     ReactiveIconDefinition(
@@ -56,6 +57,7 @@ class _NewsFeedRowArrayState extends State<NewsFeedRowArray> {
 
   checkIfUserLikedPost() {
     List<dynamic> reactionsList = widget.document["reactions"];
+
     if (reactionsList != null) {
       String reactionToShow = "";
       bool foundReaction = false;
@@ -73,6 +75,7 @@ class _NewsFeedRowArrayState extends State<NewsFeedRowArray> {
         setState(() {
           facebook = reactionToShow;
           liked = true;
+          numberOfReactions = reactionsList.length;
         });
       }
     }
@@ -108,6 +111,7 @@ class _NewsFeedRowArrayState extends State<NewsFeedRowArray> {
     }).then((value) {
       setState(() {
         liked = false;
+        numberOfReactions--;
       });
     });
   }
@@ -125,6 +129,7 @@ class _NewsFeedRowArrayState extends State<NewsFeedRowArray> {
     }).then((value) {
       setState(() {
         liked = true;
+        numberOfReactions++;
       });
     });
   }
@@ -166,39 +171,44 @@ class _NewsFeedRowArrayState extends State<NewsFeedRowArray> {
 //          child: Text(liked ? "Liked" : "Like"),
 //          onPressed: likePost,
 //        ),
-        trailing: ReactiveButton(
-          child: Container(
-            decoration: BoxDecoration(
+        trailing: Column(
+          children: <Widget>[
+            ReactiveButton(
+              child: Container(
+                decoration: BoxDecoration(
 //              border: Border.all(
 //                color: Colors.black,
 //                width: 1.0,
 //              ),
-              color: Colors.white,
+                  color: Colors.white,
+                ),
+                width: 80.0,
+                height: 40.0,
+                child: Center(
+                  child: !liked
+                      ? Text('Like')
+                      : Image.asset(
+                          'assets/images/$facebook.png',
+                          width: 32.0,
+                          height: 32.0,
+                        ),
+                ),
+              ),
+              icons: _facebook, //_flags,
+              onTap: () {
+                print('TAP');
+                unlikePost();
+              },
+              onSelected: (ReactiveIconDefinition button) {
+                setState(() {
+                  facebook = button.code;
+                  likePost();
+                });
+              },
+              iconWidth: 32.0,
             ),
-            width: 80.0,
-            height: 40.0,
-            child: Center(
-              child: !liked
-                  ? Text('Like')
-                  : Image.asset(
-                      'assets/images/$facebook.png',
-                      width: 32.0,
-                      height: 32.0,
-                    ),
-            ),
-          ),
-          icons: _facebook, //_flags,
-          onTap: () {
-            print('TAP');
-            unlikePost();
-          },
-          onSelected: (ReactiveIconDefinition button) {
-            setState(() {
-              facebook = button.code;
-              likePost();
-            });
-          },
-          iconWidth: 32.0,
+            Expanded(child: Text("$numberOfReactions"))
+          ],
         ),
       ),
     );
